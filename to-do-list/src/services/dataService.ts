@@ -18,32 +18,44 @@ export default class DataService {
         let mappedData: Task[] | [] = [];
         const response = await axios.get(uri).catch(e => console.error(e));
 
-        if (response && response.data && response.data?.length) {
-            const data: Task[] = response.data;
+        if (response && response.data && response.data?.success) {
+            const data: Task[] = response.data.content;
             mappedData = data.map(i => new Task(i?.id, i?.description, i?.completed));
         }
         return mappedData;
     }
 
     addTask = async (task: Task): Promise<void> => {
-        await axios.post(`${uri}add`, {
+        const response: any = await axios.post(`${uri}add`, {
             description: task.description,
             completed: task.completed
         })
             .catch(e => console.error(e));
+        if (response?.data?.success) {
+            return response?.data?.success;
+        }
+        throw new Error("Problem with adding task");
     }
 
     markComplete = async (task: Task): Promise<void> => {
-        await axios.post(`${uri}update`, {
+        const response: any = await axios.post(`${uri}update`, {
             id: task.id,
             description: task.description,
             completed: !task.completed
         })
             .catch(e => console.error(e));
+        if (response?.data?.success) {
+            return response?.data?.success;
+        }
+        throw new Error("Problem with updating task");
     }
 
     deleteTask = async (task: Task): Promise<void> => {
-        await axios.delete(`${uri}${task.id}`)
+        const response: any = await axios.delete(`${uri}${task.id}`)
             .catch(e => console.error(e));
+        if (response?.data?.success) {
+            return response?.data?.success;
+        }
+        throw new Error("Problem with deleting task");
     }
 }

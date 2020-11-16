@@ -8,11 +8,8 @@ import { dataService } from '../services/dataService';
 
 import Task from "../models/Task";
 
-interface IProps {
 
-}
-
-const HomePage: FunctionComponent<IProps> = (props) => {
+const HomePage: FunctionComponent<{}> = (props) => {
     const [list, setlist] = useState<Task[]>([]);
 
     useEffect(() => {
@@ -26,19 +23,19 @@ const HomePage: FunctionComponent<IProps> = (props) => {
     }
 
     const markCompleted = async (task: Task): Promise<void> => {
-        await dataService?.markComplete(task);
-        await getData();
+        const sucess = await dataService?.markComplete(task);
+        sucess && await getData();
     }
 
     const addNew = async (description: string): Promise<void> => {
         const task = new Task(new Date().getTime().toString(), description)
-        await dataService?.addTask(task);
-        await getData();
+        const sucess = await dataService?.addTask(task);
+        sucess && await getData();
     }
 
     const deleteTask = async (task: Task): Promise<void> => {
-        await dataService?.deleteTask(task);
-        await getData();
+        const sucess = await dataService?.deleteTask(task);
+        sucess && await getData();
     }
 
     return (
